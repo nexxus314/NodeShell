@@ -6,7 +6,7 @@ const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-const builtInCommands = ["echo", "exit", "type", "pwd", "cd","ls"];
+const builtInCommands = ["echo", "exit", "type", "pwd", "cd", "ls"];
 
 rl.setPrompt(`$ `);
 rl.prompt();
@@ -56,21 +56,21 @@ rl.on(`line`, (question) => {
     rl.prompt();
     return;
   }
-  if(commands==="ls"){
-      fs.readdir(process.cwd(), (err, files) => {
-        if(err){
-          console.log(`Error Reading directory:`);
-          return;
-        }
-    files.forEach(file => {
-      console.log(file);
-      
+  if (question === "ls") {
+    fs.readdir(process.cwd(), (err, files) => {
+      if (err) {
+        console.log(`Error Reading directory:`);
+        
+      } else {
+        files.forEach((file) => {
+          console.log(file);
+        });
+      }
+      rl.prompt();
     });
-    rl.prompt()
-    return
-  });
-  
-    }
+
+    return;
+  }
 
   if (question === `pwd`) {
     console.log(process.cwd());
@@ -78,25 +78,28 @@ rl.on(`line`, (question) => {
     return;
   }
   if (commands === "cd") {
-    const HOME = process.env.HOME || process.env.USERPROFILE || process.env.HOMEPATH 
-    
-    if (args.length === 0) {
-      try{
-      process.chdir(HOME);
+    const HOME =
+      process.env.HOME || process.env.USERPROFILE || process.env.HOMEPATH;
 
-      }catch(err){
-        console.log(`cd:${HOME}: No such file or directory found`)
+    if (args.length === 0) {
+      try {
+        process.chdir(HOME);
+      } catch (err) {
+        console.log(`cd:${HOME}: No such file or directory found`);
       }
       rl.prompt();
       return;
     }
-    let target=args.join("")
- 
-    if(target.startsWith('"')&&target.endsWith('"') || (target.startsWith("'")&&target.endsWith("'"))){
-      target=target.slice(1,-1)
+    let target = args.join("");
+
+    if (
+      (target.startsWith('"') && target.endsWith('"')) ||
+      (target.startsWith("'") && target.endsWith("'"))
+    ) {
+      target = target.slice(1, -1);
     }
 
-    target=target.replace(/\\/g,"/");
+    target = target.replace(/\\/g, "/");
 
     if (target && target.startsWith("~")) {
       target = target.replace("~", HOME);
