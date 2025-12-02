@@ -1,0 +1,22 @@
+{
+  "name": "nodeshell",
+  "version": "1.0.0",
+  "description": "Build your own Shell challenge, from CodeCrafters",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node app/main.js"
+  },
+  "keywords": [
+    "build-your-own-x"
+  ],
+  "author": "nexxus314",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nexxus314/NodeShell.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nexxus314/NodeShell/issues"
+  },
+  "homepage": "https://github.com/nexxus314/NodeShell#readme"
+}
