@@ -15,19 +15,31 @@ function parseArguments(input) {
   let args = [];
   let current = "";
   let inSingleQuote = false;
+  let inDoubleQuote = false;
+  let escapeNext = false;
 
   for (let i = 0; i < input.length; i++) {
     const char = input[i];
+    if (escapeNext) {
+      current += char;
+      escapeNext = false;
+      continue;
+    }
+    if (!inSingleQuote && !inDoubleQuote && char === `\\`) {
+      escapeNext = true;
+      continue;
+    }
 
-    if (char === "'" && !inSingleQuote) {
-      inSingleQuote = true;
+    if (char === "'" && !inDoubleQuote) {
+      inSingleQuote = !inSingleQuote;
       continue;
     }
-    if (char === "'" && inSingleQuote) {
-      inSingleQuote = false;
+    if (char === '"' && !inSingleQuote) {
+      inDoubleQuote = !inDoubleQuote;
       continue;
     }
-    if (!inSingleQuote && /\s/.test(char)) {
+
+    if (!inSingleQuote && !inDoubleQuote && /\s/.test(char)) {
       if (current.length > 0) {
         args.push(current);
         current = "";
@@ -51,7 +63,7 @@ rl.on(`line`, (question) => {
     rl.close();
     return;
   }
-  if (question.startsWith("echo ")) {
+  if (commands === "echo") {
     console.log(args.join(" "));
     rl.prompt();
     return;
@@ -60,7 +72,8 @@ rl.on(`line`, (question) => {
     fs.readdir(process.cwd(), (err, files) => {
       if (err) {
         console.log(`Error Reading directory:`);
-        
+        rl.prompt();
+        return;
       } else {
         files.forEach((file) => {
           console.log(file);
